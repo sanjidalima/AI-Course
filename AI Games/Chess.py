@@ -1,256 +1,224 @@
-import time
+import pygame
+import chess
 import random
-from copy import deepcopy
+import sys
+from pygame.locals import *
 
+# Initialize pygame
+pygame.init()
 
-pieces = {
-    "r": "♜", "n": "♞", "b": "♝", "q": "♛", "k": "♚", "p": "♟",
-    "R": "♖", "N": "♘", "B": "♗", "Q": "♕", "K": "♔", "P": "♙",
-    ".": "."
-}
+# Constants
+WIDTH, HEIGHT = 600, 600
+BOARD_SIZE = 512
+SQUARE_SIZE = BOARD_SIZE // 8
+MARGIN = (WIDTH - BOARD_SIZE) // 2
+FPS = 60
 
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+LIGHT_SQUARE = (240, 217, 181)
+DARK_SQUARE = (181, 136, 99)
+HIGHLIGHT = (247, 247, 105, 150)
+LEGAL_MOVE = (124, 252, 0, 150)
 
-def init_board():
-    return [
-        list("rnbqkbnr"),
-        list("pppppppp"),
-        list("........"),
-        list("........"),
-        list("........"),
-        list("........"),
-        list("PPPPPPPP"),
-        list("RNBQKBNR")
-    ]
+# Set up display
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('Chess: User vs Computer')
+clock = pygame.time.Clock()
 
+# Load piece images
+piece_images = {}
+pieces = ['p', 'r', 'n', 'b', 'q', 'k']
+colors = ['w', 'b']
 
-def print_board(board):
-    print("\n  a b c d e f g h")
-    for i in range(8):
-        print(8 - i, end=" ")
-        for piece in board[i]:
-            print(pieces.get(piece, "."), end=" ")
-        print(8 - i)
-    print("  a b c d e f g h\n")
+def load_pieces():
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    image_dir = os.path.join(current_dir, 'image')
+    print(f"Looking for images in: {image_dir}")
+    
+    for color in colors:
+        for piece in pieces:
+            key = color + piece
+            image_path = os.path.join(image_dir, f'{key}.png')
+            try:
+                print(f"Attempting to load: {image_path}")
+                if not os.path.exists(image_path):
+                    print(f"File does not exist: {image_path}")
+                    continue
+                image = pygame.image.load(image_path)
+                if image is None:
+                    print(f"Failed to load image: {image_path}")
+                    continue
+                piece_images[key] = pygame.transform.smoothscale(image, (SQUARE_SIZE, SQUARE_SIZE))
+                print(f"Successfully loaded: {image_path}")
+            except Exception as e:
+                print(f"Error loading {image_path}: {str(e)}")
+                piece_images[key] = None
+    
+    print("Loaded pieces:", list(piece_images.keys()))
 
+load_pieces()
 
-def parse_position(pos):
-    if len(pos) != 2: return None
-    col = ord(pos[0]) - ord('a')
-    row = 8 - int(pos[1])
-    if 0 <= row < 8 and 0 <= col < 8:
-        return row, col
-    return None
+class ChessGame:
+    def __init__(self):
+        self.board = chess.Board()
+        self.selected_square = None
+        self.legal_moves = []
+        self.computer_thinking = False
+        self.message = ""
+        self.font = pygame.font.SysFont('Arial', 18)
 
+    def draw_board(self):
+        for row in range(8):
+            for col in range(8):
+                color = LIGHT_SQUARE if (row + col) % 2 == 0 else DARK_SQUARE
+                pygame.draw.rect(screen, color, (MARGIN + col * SQUARE_SIZE,
+                                                 MARGIN + row * SQUARE_SIZE,
+                                                 SQUARE_SIZE, SQUARE_SIZE))
 
-PIECE_VALUES = {
-    'p': -1, 'n': -3, 'b': -3, 'r': -5, 'q': -9, 'k': -100,
-    'P': 1, 'N': 3, 'B': 3, 'R': 5, 'Q': 9, 'K': 100
-}
+        # Highlights
+        if self.selected_square is not None:
+            row, col = 7 - self.selected_square // 8, self.selected_square % 8
+            highlight_surface = pygame.Surface((SQUARE_SIZE, SQUARE_SIZE), pygame.SRCALPHA)
+            highlight_surface.fill(HIGHLIGHT)
+            screen.blit(highlight_surface, (MARGIN + col * SQUARE_SIZE, MARGIN + row * SQUARE_SIZE))
 
+        for move in self.legal_moves:
+            to_square = move.to_square
+            row, col = 7 - to_square // 8, to_square % 8
+            highlight_surface = pygame.Surface((SQUARE_SIZE, SQUARE_SIZE), pygame.SRCALPHA)
+            highlight_surface.fill(LEGAL_MOVE)
+            screen.blit(highlight_surface, (MARGIN + col * SQUARE_SIZE, MARGIN + row * SQUARE_SIZE))
 
-POSITION_BONUS = {
-    'P': [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [5, 5, 5, 5, 5, 5, 5, 5],
-        [1, 1, 2, 3, 3, 2, 1, 1],
-        [0.5,0.5,1,2.5,2.5,1,0.5,0.5],
-        [0, 0, 0, 2, 2, 0, 0, 0],
-        [0.5,-0.5,-1,0,0,-1,-0.5,0.5],
-        [0.5,1,1,-2,-2,1,1,0.5],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-    ]
-}
+        # Draw pieces
+        for square in chess.SQUARES:
+            piece = self.board.piece_at(square)
+            if piece:
+                row, col = 7 - square // 8, square % 8
+                symbol = piece.symbol()
+                print(f"Piece at {square}: symbol={symbol}")
+                if piece.color == chess.WHITE:
+                    piece_key = 'w' + symbol.lower()
+                else:
+                    piece_key = 'b' + symbol.lower()
+                print(f"Looking for image with key: {piece_key}")
+                image = piece_images.get(piece_key)
+                if image:
+                    screen.blit(image, (MARGIN + col * SQUARE_SIZE, MARGIN + row * SQUARE_SIZE))
+                else:
+                    print(f"No image found for piece: {piece_key}, available keys: {list(piece_images.keys())}")
 
+        # Messages
+        if self.message:
+            text = self.font.render(self.message, True, BLACK)
+            screen.blit(text, (20, HEIGHT - 30))
 
-def get_piece_moves(board, pos, piece):
-    row, col = pos
-    moves = []
+        turn_text = "White's turn" if self.board.turn == chess.WHITE else "Black's turn"
+        turn_color = WHITE if self.board.turn == chess.WHITE else BLACK
+        text = self.font.render(turn_text, True, turn_color)
+        screen.blit(text, (WIDTH - 130, 20))
 
-    if piece.upper() == 'P':
-        direction = 1 if piece.islower() else -1
-        start_row = 1 if piece.islower() else 6
-        if 0 <= row + direction < 8 and board[row + direction][col] == '.':
-            moves.append((row + direction, col))
-            if row == start_row and board[row + 2*direction][col] == '.':
-                moves.append((row + 2*direction, col))
-        for dcol in [-1, 1]:
-            new_col = col + dcol
-            if 0 <= new_col < 8 and 0 <= row + direction < 8:
-                target = board[row + direction][new_col]
-                if target != '.' and target.isupper() != piece.isupper():
-                    moves.append((row + direction, new_col))
+        if self.computer_thinking:
+            thinking_text = self.font.render("Computer thinking...", True, BLACK)
+            screen.blit(thinking_text, (WIDTH - 170, HEIGHT - 30))
 
-    elif piece.upper() == 'R':
-        directions = [(0,1),(0,-1),(1,0),(-1,0)]
-        for dr, dc in directions:
-            for i in range(1,8):
-                nr, nc = row + dr*i, col + dc*i
-                if not (0 <= nr < 8 and 0 <= nc < 8): break
-                target = board[nr][nc]
-                if target == '.':
-                    moves.append((nr, nc))
-                elif target.isupper() != piece.isupper():
-                    moves.append((nr, nc))
-                    break
-                else: break
+    def handle_click(self, pos):
+        if self.computer_thinking or self.board.turn == chess.BLACK:
+            return
 
-    elif piece.upper() == 'N':
-        for dr, dc in [(-2,-1),(-2,1),(-1,-2),(-1,2),(1,-2),(1,2),(2,-1),(2,1)]:
-            nr, nc = row + dr, col + dc
-            if 0 <= nr < 8 and 0 <= nc < 8:
-                target = board[nr][nc]
-                if target == '.' or target.isupper() != piece.isupper():
-                    moves.append((nr, nc))
+        x, y = pos
+        if MARGIN <= x < MARGIN + BOARD_SIZE and MARGIN <= y < MARGIN + BOARD_SIZE:
+            col = (x - MARGIN) // SQUARE_SIZE
+            row = 7 - (y - MARGIN) // SQUARE_SIZE
+            square = row * 8 + col
 
-    elif piece.upper() == 'B':
-        directions = [(1,1),(1,-1),(-1,1),(-1,-1)]
-        for dr, dc in directions:
-            for i in range(1,8):
-                nr, nc = row + dr*i, col + dc*i
-                if not (0 <= nr < 8 and 0 <= nc < 8): break
-                target = board[nr][nc]
-                if target == '.':
-                    moves.append((nr, nc))
-                elif target.isupper() != piece.isupper():
-                    moves.append((nr, nc))
-                    break
-                else: break
+            if self.selected_square is not None:
+                move = chess.Move(self.selected_square, square)
+                if (self.board.piece_at(self.selected_square).piece_type == chess.PAWN and
+                        (square // 8 == 0 or square // 8 == 7)):
+                    move = chess.Move(self.selected_square, square, promotion=chess.QUEEN)
 
-    elif piece.upper() == 'Q':
-        return get_piece_moves(board, pos, 'R') + get_piece_moves(board, pos, 'B')
+                if move in self.legal_moves:
+                    self.make_move(move)
+                    self.selected_square = None
+                    self.legal_moves = []
+                    if not self.board.is_game_over() and self.board.turn == chess.BLACK:
+                        self.computer_move()
+                else:
+                    piece = self.board.piece_at(square)
+                    if piece and piece.color == self.board.turn:
+                        self.selected_square = square
+                        self.legal_moves = [m for m in self.board.legal_moves if m.from_square == square]
+            else:
+                piece = self.board.piece_at(square)
+                if piece and piece.color == self.board.turn:
+                    self.selected_square = square
+                    self.legal_moves = [m for m in self.board.legal_moves if m.from_square == square]
 
-    elif piece.upper() == 'K':
-        for dr in [-1,0,1]:
-            for dc in [-1,0,1]:
-                if dr == 0 and dc == 0: continue
-                nr, nc = row + dr, col + dc
-                if 0 <= nr < 8 and 0 <= nc < 8:
-                    target = board[nr][nc]
-                    if target == '.' or target.isupper() != piece.isupper():
-                        moves.append((nr, nc))
-    return moves
+    def make_move(self, move):
+        self.board.push(move)
+        self.update_status()
 
+    def computer_move(self):
+        self.computer_thinking = True
+        pygame.time.delay(500)
 
-def evaluate_board(board):
-    score = 0
-    for i in range(8):
-        for j in range(8):
-            piece = board[i][j]
-            if piece != '.':
-                score += PIECE_VALUES.get(piece, 0)
-                if piece.upper() == 'P':
-                    if piece.isupper():
-                        score += POSITION_BONUS['P'][i][j]
-                    else:
-                        score -= POSITION_BONUS['P'][7-i][j]
-    return score
+        legal_moves = list(self.board.legal_moves)
+        captures = [m for m in legal_moves if self.board.is_capture(m)]
+        if captures:
+            good = [m for m in captures if not self.board.is_into_check(m)]
+            move = random.choice(good if good else captures)
+        else:
+            checks = [m for m in legal_moves if self.board.gives_check(m)]
+            move = random.choice(checks if checks else legal_moves)
 
+        self.make_move(move)
+        self.computer_thinking = False
 
-def minimax(board, depth, alpha, beta, maximizing):
-    if depth == 0:
-        return evaluate_board(board), None
-
-    best_move = None
-    if maximizing:
-        max_eval = float('-inf')
-        for move in get_all_moves(board, True):
-            new_board = make_move(deepcopy(board), move[0], move[1])
-            eval_score, _ = minimax(new_board, depth-1, alpha, beta, False)
-            if eval_score > max_eval:
-                max_eval = eval_score
-                best_move = move
-            alpha = max(alpha, eval_score)
-            if beta <= alpha: break
-        return max_eval, best_move
-    else:
-        min_eval = float('inf')
-        for move in get_all_moves(board, False):
-            new_board = make_move(deepcopy(board), move[0], move[1])
-            eval_score, _ = minimax(new_board, depth-1, alpha, beta, True)
-            if eval_score < min_eval:
-                min_eval = eval_score
-                best_move = move
-            beta = min(beta, eval_score)
-            if beta <= alpha: break
-        return min_eval, best_move
-
-
-def get_all_moves(board, is_white):
-    moves = []
-    for i in range(8):
-        for j in range(8):
-            piece = board[i][j]
-            if piece != '.' and piece.isupper() == is_white:
-                for move in get_piece_moves(board, (i, j), piece):
-                    moves.append(((i, j), move))
-    return moves
-
-
-def make_move(board, start, end):
-    sr, sc = start
-    er, ec = end
-    board[er][ec] = board[sr][sc]
-    board[sr][sc] = '.'
-    return board
-
-
-def is_valid_move(board, start, end, turn):
-    sr, sc = start
-    er, ec = end
-    if not (0 <= sr < 8 and 0 <= sc < 8 and 0 <= er < 8 and 0 <= ec < 8):
-        return False
-    piece = board[sr][sc]
-    if piece == '.' or (turn == "white" and not piece.isupper()) or (turn == "black" and not piece.islower()):
-        return False
-    valid_moves = get_piece_moves(board, start, piece)
-    return end in valid_moves
-
-
-def get_computer_move(board):
-    print("Computer is thinking...")
-    start_time = time.time()
-    _, move = minimax(board, 3, float('-inf'), float('inf'), False)
-    print(f"Computer took {time.time() - start_time:.2f} sec")
-    return move
-
+    def update_status(self):
+        if self.board.is_checkmate():
+            winner = "Black" if self.board.turn == chess.WHITE else "White"
+            self.message = f"Checkmate! {winner} wins!"
+        elif self.board.is_stalemate():
+            self.message = "Stalemate!"
+        elif self.board.is_insufficient_material():
+            self.message = "Draw: insufficient material"
+        elif self.board.is_seventyfive_moves():
+            self.message = "Draw: 75-move rule"
+        elif self.board.is_fivefold_repetition():
+            self.message = "Draw: fivefold repetition"
+        elif self.board.is_check():
+            self.message = "Check!"
+        else:
+            self.message = ""
 
 def main():
-    board = init_board()
-    turn = "white"
-    print("Welcome to Chess AI (You are White)")
-    print("Enter moves like: e2 e4 — Type 'exit' to quit\n")
+    game = ChessGame()
+    running = True
 
-    while True:
-        print_board(board)
+    while running:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                running = False
+            elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                game.handle_click(event.pos)
+            elif event.type == KEYDOWN and event.key == K_r:
+                game = ChessGame()
 
-        if turn == "white":
-            move = input("Your move: ").strip()
-            if move.lower() == "exit": break
+        screen.fill(WHITE)
+        game.draw_board()
+        pygame.display.flip()
+        clock.tick(FPS)
 
-            try:
-                start_str, end_str = move.split()
-                start = parse_position(start_str)
-                end = parse_position(end_str)
+        # Check if game is over
+        if game.board.is_game_over():
+            pygame.time.delay(3000)  # Show the message for 3 seconds
+            running = False
 
-                if not start or not end or not is_valid_move(board, start, end, turn):
-                    print("❌ Invalid move. Try again.")
-                    continue
-
-                board = make_move(board, start, end)
-                turn = "black"
-            except:
-                print("❌ Format should be like 'e2 e4'.")
-                continue
-        else:
-            computer_move = get_computer_move(board)
-            if computer_move:
-                s, e = computer_move
-                board = make_move(board, s, e)
-                print(f" Computer played: {chr(s[1]+97)}{8-s[0]} {chr(e[1]+97)}{8-e[0]}")
-                turn = "white"
-            else:
-                print("✅ Computer has no valid moves. You win!")
-                break
+    pygame.quit()
+    sys.exit()
 
 if __name__ == "__main__":
     main()
