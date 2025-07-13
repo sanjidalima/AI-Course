@@ -1,1 +1,1 @@
-# AI-Course
+# AI-Coursee
