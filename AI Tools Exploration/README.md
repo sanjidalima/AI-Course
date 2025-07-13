@@ -1,5 +1,5 @@
-#  AI Tools Exploration – Kushal Panthadas  
-**Student ID:** 0562310005101015  
+#  AI Tools Exploration – Sanjida Khanom  
+**Student ID:** 0562310005101008  
 **Instructor:** Mr. Razorshi Prozzwal Talukder  
 **Department of CSE, North East University, Sylhet**
 
@@ -14,11 +14,11 @@
 
 ###  How I Created It:
 
-1. **Scriptwriting:**  
-   I wrote a personalized script summarizing our full AI course — covering both theoretical topics like search algorithms, reasoning, NLP, and robotics, and practical lab work including Minimax, Alpha-Beta, and game implementations.
+1. 📝 Scriptwriting:
+I prepared a custom-written script that summarizes the entire AI course — highlighting key theoretical concepts such as search strategies, reasoning, natural language processing (NLP), and robotics, along with hands-on lab tasks like Minimax, Alpha-Beta pruning, and AI-based game development.
 
-2. **Using InVideo:**  
-   I used the **AI Text-to-Video** tool in InVideo to generate a professional video with automated visuals and voiceover narration.
+2. 🎬 Using InVideo:
+I utilized InVideo's AI-powered Text-to-Video tool to create a polished and engaging video, complete with automated visuals and voiceover narration for a professional presentation.
 
 3. **Visual Enhancements:**  
    I added visuals for:
@@ -56,10 +56,14 @@ AI_Tools_Exploration/
 
 ###  How I Created It:
 
-1. **Content Planning:**  
-   I organized the presentation into 10 key slides covering:
-   - Theory: Agents, search, CSP, logic, probabilistic reasoning, NLP, robotics  
-   - Lab tasks: Minimax, Alpha-Beta, game implementation
+1. 🗂️ Content Planning:
+I structured the presentation into 10 focused slides, covering:
+
+Theoretical Topics 
+– including agents, search strategies, constraint satisfaction problems (CSP), logical reasoning, probabilistic inference, natural language processing (NLP), and robotics
+
+Lab Activities 
+– such as Minimax, Alpha-Beta Pruning, and AI-based game implementations
 
 2. **Using Gamma AI:**  
    I used **Gamma’s AI slide generator** to create layouts based on my content prompt.
