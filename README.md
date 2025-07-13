@@ -82,5 +82,5 @@ Course Supervisor
 Mr. Razorshi Prozzwal Talukder
 
 Lecturer
-Department of CSE
-North East University, Bangladesh
+ Department of CSE
+  North East University, Bangladesh
