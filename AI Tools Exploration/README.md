@@ -8,7 +8,7 @@
 ##  AI Course Summary Video (Created with AI Tool)
 
 **Tool Used:** [InVideo](https://invideo.io)  
-**Final Output:** `AI_Course_Video.mp4`  
+**Final Output:** `AI Video.mp4`  
 **Duration:** ~1.20 minutes  
 **Voiceover:** Professional Female Voiceover (AI-generated)
 
@@ -29,7 +29,7 @@ I utilized InVideo's AI-powered Text-to-Video tool to create a polished and enga
    - Real-world robotics examples
 
 4. **Export:**  
-   The video was finalized and exported as `AI_Course_Video.mp4`.
+   The video was finalized and exported as `AI Video.mp4`.
 
 ###  References:
 - [ InVideo AI Video Creation Blog](https://invideo.io/blog/how-to-make-ai-videos/?utm_source)
