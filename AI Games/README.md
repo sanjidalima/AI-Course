@@ -1,80 +1,105 @@
-AI Games Collection – Challenge the Machine!
-Welcome to AI Games, a collection of classic strategy games powered by intelligent decision-making algorithms. Whether you're trying to beat an unbeatable Tic Tac Toe bot, checkmating a smart Chess engine, or connecting four before a cunning AI opponent — this is your playground to test your wits against artificial intelligence.
+# 🎮 AI Games Collection – Challenge the Machine!
 
-What's Inside?
+Welcome to **AI Games**, a collection of classic strategy games powered by intelligent decision-making algorithms. Whether you're trying to beat an unbeatable Tic Tac Toe bot, checkmating a smart Chess engine, or escaping from a learning zombie — this is your playground to test your wits against artificial intelligence.
+
+---
+
+## 📦 What's Inside?
+
 Each game is a complete implementation featuring:
 
-Clean, modular Python source code
-Built-in or GUI-based gameplay
-AI logic using Minimax, Alpha-Beta Pruning, and smart heuristics
-Instructions, dependencies, and gameplay screenshots
-Games Included
-Game	Mode	AI Algorithm Used	Interface
-🔲 Tic Tac Toe	You vs AI	Minimax (Unbeatable AI)	Tkinter GUI
-♟️ Chess	You vs AI	Minimax + Alpha-Beta	Pygame GUI
-🔴 Zhombie_Escaped	You vs Huristic 
-How to Run
-Prerequisites
-Python 3.x
-Some games require additional libraries (see below)
-Install Required Libraries
+- ✅ Clean, modular Python source code  
+- ✅ Built-in or GUI-based gameplay  
+- ✅ AI logic using Minimax, Alpha-Beta Pruning, and pattern-based prediction  
+- ✅ Instructions, dependencies, and gameplay screenshots  
+
+---
+
+## 🧩 Games Included
+
+| Game             | Mode        | AI Algorithm Used              | Interface      |
+|------------------|-------------|--------------------------------|----------------|
+| 🔲 Tic Tac Toe   | You vs AI   | Minimax (Unbeatable)           | Tkinter GUI    |
+| ♟️ Chess         | You vs AI   | Minimax + Alpha-Beta Pruning   | Pygame GUI     |
+| 🧟 Zombie Escape | You vs AI   | Pattern-Based Movement AI      | Pygame GUI     |
+
+---
+
+## ▶️ How to Run
+
+### 🔧 Prerequisites
+- Python 3.x
+- Some games require additional libraries
+
+### 📦 Install Required Libraries
+
+```bash
 pip install pygame python-chess
+```
 
+✅ **Tic Tac Toe** only uses `tkinter` and `math` (built-in)  
+✅ **Zombie Escape** and **Chess** require `pygame`
 
+---
 
-Tic Tac Toe requires only built-in tkinter and math
-Connect Four is fully terminal-based and needs no extra libraries
+## 🗂️ Project Structure
 
-
- Project Structure
-
-
+```
 AI_Games/
 ├── README.md ← Main README (overview of all games)
 ├── TicTacToe/
-│ ├── tic_tac_toe.py     ← Main game code (rename from "Tik_Tak_Toe copy.py")
-│ ├── README.md          ← Game-specific instructions
-│ └── image/
-│ ├── image-1.png
-│ └── image.png
-|  |__ image-2.png 
+│   ├── tic_tac_toe.py       ← Main game code
+│   ├── README.md            ← Game-specific instructions
+│   └── image/
+│       ├── image-1.png
+│       ├── image.png
+│       └── image-2.png
 │
-
 ├── Chess/
-│ ├── chess_ai.py            ← Rename from "Chess.py"
-│ ├── README.md              ← Chess game documentation
-│ └── images/
-│ ├── chess1.png
-│ └── chess2.png
+│   ├── chess_ai.py          ← Main game code
+│   ├── README.md            ← Chess game docs
+│   └── images/
+│       ├── chess1.png
+│       └── chess2.png
 │
+├── Zombie_Escaped/
+│   ├── zombie_escaped.py    ← Main game code
+│   ├── README.md            ← Zombie Escape docs
+│   └── images/
+│       ├── zombie1.png
+│       ├── zombie2.png
+│       └── zombie3.png
+```
 
-├── Zhombie_Escaped/
-│ ├── Zhombie_Escaped.py       ← Rename from "Zhombie_Escaped.py"
-│ ├── README.md             ← Zhombie_Escaped game documentation
-│ └── images/
-│ └── cn.png
-| |__ cn2.png
-| |__ cn3.png
+---
 
-Screenshots
-Each game folder contains an images/ folder with gameplay screenshots to give a quick preview.
+## 🖼️ Screenshots
 
-Algorithms Behind the Scenes
-Minimax – Recursive strategy used in two-player games to minimize opponent's best outcome
+Each game folder includes an `/images/` folder with gameplay screenshots to give a quick preview.
 
-Alpha-Beta Pruning – Smart optimization to skip unnecessary branches in Minimax
+---
 
-Board Evaluation – Heuristic scoring of game states (especially in Chess and Connect Four)
+## 🧠 Algorithms Behind the Scenes
 
-Why This Project?
-This collection showcases how AI can make optimal decisions even in simple games. It’s an educational and fun journey through classic AI search strategies.
+- **Minimax:** Used in Tic Tac Toe and Chess for perfect decision-making
+- **Alpha-Beta Pruning:** Optimizes Minimax in Chess for faster response
+- **Pattern Recognition AI:** In Zombie Escape, the zombie learns your most frequent movement direction
 
-Perfect for:
-Beginners learning game AI
+---
 
-Students studying Minimax logic
+## 🎯 Why This Project?
 
-Showcasing skills in Python + Game AI
+This collection showcases how AI can make optimal decisions even in simple games. It’s an educational and fun journey through classic AI search strategies and behavioral prediction.
 
-Developed By
-Sanjida Khanom 📍 North East University, Sylhet 🎓 CSE | Aspiring AI & Software Engineer
+**Perfect for:**
+- 🧑‍💻 Beginners learning game AI  
+- 📚 Students studying Minimax logic  
+- 🚀 Showcasing skills in Python + Game AI  
+
+---
+
+## 👩‍💻 Developed By
+
+**Sanjida Khanom**  
+📍 North East University, Sylhet  
+🎓 Department of CSE | AI Lab (Jan–Jun 2025)
