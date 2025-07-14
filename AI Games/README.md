@@ -1,46 +1,80 @@
-# 🕹️ AI Games Collection
+AI Games Collection – Challenge the Machine!
+Welcome to AI Games, a collection of classic strategy games powered by intelligent decision-making algorithms. Whether you're trying to beat an unbeatable Tic Tac Toe bot, checkmating a smart Chess engine, or connecting four before a cunning AI opponent — this is your playground to test your wits against artificial intelligence.
 
-Welcome to the **AI Games** section of the Artificial Intelligence Lab course!  
-This folder contains interactive games developed using Python, Pygame, and AI algorithms. Each game demonstrates how artificial intelligence can be applied in gameplay to simulate smart decision-making.
+What's Inside?
+Each game is a complete implementation featuring:
 
----
+Clean, modular Python source code
+Built-in or GUI-based gameplay
+AI logic using Minimax, Alpha-Beta Pruning, and smart heuristics
+Instructions, dependencies, and gameplay screenshots
+Games Included
+Game	Mode	AI Algorithm Used	Interface
+🔲 Tic Tac Toe	You vs AI	Minimax (Unbeatable AI)	Tkinter GUI
+♟️ Chess	You vs AI	Minimax + Alpha-Beta	Pygame GUI
+🔴 Zhombie_Escaped	You vs Huristic 
+How to Run
+Prerequisites
+Python 3.x
+Some games require additional libraries (see below)
+Install Required Libraries
+pip install pygame python-chess
 
-## 🎮 Included Games
 
-### ♟️ Chess AI (Simplified)
-- **Description:** A console-based chess game with AI opponent logic.
-- **Algorithm Used:** Move validation and AI decision logic (rule-based or minimax simplified)
-- **How to Play:** Player makes legal chess moves via keyboard; AI responds.
-- **Technology:** Python
-- **Note:** Basic rule set applied (no castling/en passant). Ideal for demonstrating decision-making.
 
----
+Tic Tac Toe requires only built-in tkinter and math
+Connect Four is fully terminal-based and needs no extra libraries
 
-### ❌⭕ Tic-Tac-Toe (AI vs Human)
-- **Description:** Classic 3x3 Tic-Tac-Toe game using `Tkinter` GUI.
-- **Algorithm Used:** Minimax Algorithm (perfect, unbeatable AI)
-- **How to Play:** Human plays as "X", AI as "O". Click to make moves.
-- **Technology:** Python, Tkinter
-- **Features:** GUI, auto-reset, popup result display (Win/Lose/Draw)
 
----
+ Project Structure
 
-### 🧟‍♂️ Zombie Escape
-- **Description:** A grid-based survival game where a zombie chases the player using basic AI.
-- **AI Logic:** The zombie learns and follows the player’s most common movement pattern.
-- **Controls:** U = Up, D = Down, L = Left, R = Right, S = Restart
-- **Technology:** Python, Pygame
-- **Objective:** Reach the bottom-right corner before the zombie catches you!
 
----
+AI_Games/
+├── README.md ← Main README (overview of all games)
+├── TicTacToe/
+│ ├── tic_tac_toe.py     ← Main game code (rename from "Tik_Tak_Toe copy.py")
+│ ├── README.md          ← Game-specific instructions
+│ └── image/
+│ ├── image-1.png
+│ └── image.png
+|  |__ image-2.png 
+│
 
-## 🔧 Requirements
+├── Chess/
+│ ├── chess_ai.py            ← Rename from "Chess.py"
+│ ├── README.md              ← Chess game documentation
+│ └── images/
+│ ├── chess1.png
+│ └── chess2.png
+│
 
-- Python 3.x
-- `pygame` (for Zombie Escape)
-- `tkinter` (for Tic-Tac-Toe; usually pre-installed)
+├── Zhombie_Escaped/
+│ ├── Zhombie_Escaped.py       ← Rename from "Zhombie_Escaped.py"
+│ ├── README.md             ← Zhombie_Escaped game documentation
+│ └── images/
+│ └── cn.png
+| |__ cn2.png
+| |__ cn3.png
 
-Install Pygame if needed:
-```bash
-pip install pygame
+Screenshots
+Each game folder contains an images/ folder with gameplay screenshots to give a quick preview.
 
+Algorithms Behind the Scenes
+Minimax – Recursive strategy used in two-player games to minimize opponent's best outcome
+
+Alpha-Beta Pruning – Smart optimization to skip unnecessary branches in Minimax
+
+Board Evaluation – Heuristic scoring of game states (especially in Chess and Connect Four)
+
+Why This Project?
+This collection showcases how AI can make optimal decisions even in simple games. It’s an educational and fun journey through classic AI search strategies.
+
+Perfect for:
+Beginners learning game AI
+
+Students studying Minimax logic
+
+Showcasing skills in Python + Game AI
+
+Developed By
+Sanjida Khanom 📍 North East University, Sylhet 🎓 CSE | Aspiring AI & Software Engineer
