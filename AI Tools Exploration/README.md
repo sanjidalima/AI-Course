@@ -9,8 +9,8 @@
 
 **Tool Used:** [InVideo](https://invideo.io)  
 **Final Output:** `AI_Course_Video.mp4`  
-**Duration:** ~2.29 minutes  
-**Voiceover:** Professional Male Voiceover (AI-generated)
+**Duration:** ~1.20 minutes  
+**Voiceover:** Professional Female Voiceover (AI-generated)
 
 ###  How I Created It:
 
