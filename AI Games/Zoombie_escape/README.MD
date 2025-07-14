@@ -87,4 +87,5 @@ Avoid repeating the same direction too much.
 📜 License
 This game is open-source and free to use for educational or modification purposes.
 
-
+# Images
+[Image](https://raw.githubusercontent.com/sanjidalima/AI-Course/refs/heads/main/AI%20Games/Zoombie_escape/Image/Zhombie_Escapde.PNG)
